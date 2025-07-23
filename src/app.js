@@ -5,7 +5,6 @@ import conn from "./sequelize.js"
 
 //Tabelas
 import tarefaTabela from "./tarefasTabela.js"
-import tabelaTarefa from "./tarefasTabela.js"
 
 const PORT = 3333
 
@@ -74,7 +73,7 @@ app.post("/tarefas", async (req, res) => {
     }
 
     try {
-        const tarefaCadastrada = await tabelaTarefa.create(novaTarefa)
+        const tarefaCadastrada = await tarefaTabela.create(novaTarefa)
         res.status(201).json({
             mensagem: "Tarefa cadastrada com sucesso",
             tarefaCadastrada
@@ -97,7 +96,7 @@ app.get("/tarefas/:id", async (req, res) => {
     }
 
     try {
-        const tarefa = await tabelaTarefa.findByPk(id)
+        const tarefa = await tarefaTabela.findByPk(id)
         if(!tarefa){
             res.status(404).json({
                 erro: "Tarefa não encontrada",
@@ -137,7 +136,7 @@ app.put("/tarefas/:id", async (req, res) => {
     }
 
     try {
-        const tarefaSelecionada = await tabelaTarefa.findByPk(id)
+        const tarefaSelecionada = await tarefaTabela.findByPk(id)
         if(!tarefa){
             res.status(404).json({
                 erro: "Tarefa não encontrada",
@@ -187,7 +186,7 @@ app.delete("/tarefas/:id", async (req, res) => {
             return
         }
 
-        await tabelaTarefa.destroy({
+        await tarefaTabela.destroy({
             where: {id: tarefaSelecionada.id}
         })
 
