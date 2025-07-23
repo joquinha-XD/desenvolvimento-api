@@ -70,7 +70,7 @@ app.post("/tarefas", async (req, res) => {
         })
     } catch (error) {
         res.status(500).json({
-            erro: "Erro interno ao listar tarefas"
+            erro: "Erro interno ao cadastrar uma tarefa"
         })
     }
 })
@@ -100,7 +100,7 @@ app.get("/tarefas/:id", async (req, res) => {
         })
     } catch (error) {
         res.status(500).json({
-            erro: "Erro interno ao listar tarefas"
+            erro: "Erro interno ao listar uma tarefa"
         })
     }
 })
@@ -152,13 +152,41 @@ app.put("/tarefas/:id", async (req, res) => {
         })
     } catch (error) {
         res.status(500).json({
-            erro: "Erro interno ao listar tarefas"
+            erro: "Erro interno ao atualizar uma tarefa"
         })
     }
 
 })
 
-app.delete("/tarefas/:id", async (req, res) => {})
+app.delete("/tarefas/:id", async (req, res) => {
+    const { id } = req.params
+
+    if(!id){
+        res.status(400).json({mensagem: "ID Parâmetro inválido"})
+        return
+    }
+
+    try {
+        const tarefaSelecionada = await tarefaTabela.findByPk(id)
+        if(!tarefaSelecionada){
+            res.status(404).json({
+                erro: "Tarefa não encontrada",
+                mensagem: `ID ${id} não existe no banco`
+            })
+            return
+        }
+
+        await tabelaTarefa.destroy({
+            where: {id: tarefaSelecionada.id}
+        })
+
+        res.status(204).send()
+    } catch (error) {
+        res.status(500).json({
+            erro: "Erro interno ao deletar uma tarefa"
+        })
+    }
+})
 
 //Middlewares
 app.use((req, res) => {
