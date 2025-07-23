@@ -27,7 +27,17 @@ conn
     })
     .catch()
 
+const logRoutes = (req, res, next) => {
+    const { url, method } = req
+    const rota = `[${method.toUpperCase()}] - ${url}`
+    console.log(rota)
+    next()
+}
 
+//Middleware GLOBAL
+app.use(logRoutes)
+
+//middleware LOCAL -> NA ROTA
 app.get("/tarefas", async (req, res) => {
     try {
         const tarefas = await tarefaTabela.findAll()
@@ -38,6 +48,7 @@ app.get("/tarefas", async (req, res) => {
         })
     }
 })
+
 app.post("/tarefas", async (req, res) => {
     const {tarefa, descricao} = req.body
 
