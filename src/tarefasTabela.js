@@ -1,5 +1,6 @@
 import { DataTypes } from "sequelize"
 import conn from "./sequelize.js"
+import setorTabela from "./setorTabela.js";
 
 const tabelaTarefa = conn.define("Tarefa",
     {
@@ -23,6 +24,14 @@ const tabelaTarefa = conn.define("Tarefa",
             type: DataTypes.ENUM('pendente', 'concluido'),
             defaultValue: 'pendente',
             allowNull: false
+        },
+        setor_id: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            references: {
+                model: setorTabela,
+                key: "id"
+            }
         }
     },
     {
@@ -32,5 +41,8 @@ const tabelaTarefa = conn.define("Tarefa",
         updatedAt: 'updated_at'
     }
 )
+
+setorTabela.hasMany(tabelaTarefa, {foreignKey: "setor_id"})
+tabelaTarefa.belongsTo(setorTabela, {foreignKey: "setor_id"}) 
 
 export default tabelaTarefa;
